@@ -21,8 +21,7 @@ export default function Players() {
   const times = useRef<Record<string, HTMLParagraphElement | null>>({});
   const playersStore = useTable('players');
   const [sortBy, setSortBy] = useState('name');
-  const { startTimer, pauseTimer, getElapsedTime, isTimerRunning, setTimer } =
-    useMultiTimer();
+  const { getElapsedTime, isTimerRunning, setTimer } = useMultiTimer();
   const players = useMemo(() => {
     return Object.keys(playersStore).map((key) => ({
       ...playersStore[key],
@@ -75,6 +74,16 @@ export default function Players() {
     },
   );
 
+  const reset = () => {
+    for (const player of players) {
+      handleUpdatePlayer({
+        ...player,
+        time: 0,
+      });
+    }
+    setShowResetBtn(false);
+  };
+
   useEffect(() => {
     const updateTimersInterval = setInterval(() => {
       for (const player of players) {
@@ -125,6 +134,8 @@ export default function Players() {
       playing: false,
     };
   });
+
+  const [showResetBtn, setShowResetBtn] = useState(false);
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -201,6 +212,20 @@ export default function Players() {
             <i className="iconify text-4xl icon-park-solid--add-one"></i>
           </button>
         </form>
+      </div>
+      <div className="flex justify-start gap-8">
+        <button
+          onClick={() => setShowResetBtn(!showResetBtn)}
+          className="btn btn-warning"
+        >
+          Reset
+        </button>
+
+        {showResetBtn && (
+          <button onClick={reset} className="btn btn-error">
+            RESET!!!!
+          </button>
+        )}
       </div>
     </div>
   );

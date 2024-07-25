@@ -15,6 +15,7 @@ const useMultiTimer = () => {
     if (running) {
       startTimer(key, initialState);
     } else {
+      pauseTimer(key);
       timers.current[key] ??= {
         elapsedTime: initialState,
         intervalId: null,
@@ -31,6 +32,8 @@ const useMultiTimer = () => {
     };
     if (running) {
       startTimer(key, time);
+    } else {
+      pauseTimer(key);
     }
   };
   const startTimer = (key: string, initialState = 0) => {
@@ -40,16 +43,19 @@ const useMultiTimer = () => {
       isRunning: false,
     };
 
-    const startTime = Date.now() - timers.current[key].elapsedTime;
-    timers.current[key].intervalId = setInterval(() => {
-      timers.current[key]!.elapsedTime = Date.now() - startTime;
-    }, 1);
+    if (!timers.current[key].intervalId) {
+      const startTime = Date.now() - timers.current[key].elapsedTime;
+      timers.current[key].intervalId = setInterval(() => {
+        timers.current[key]!.elapsedTime = Date.now() - startTime;
+      }, 1);
+    }
     timers.current[key].isRunning = true;
   };
 
   const pauseTimer = (key: string) => {
     if (timers.current[key]) {
       clearInterval(timers.current[key].intervalId!);
+      timers.current[key].intervalId = null;
       timers.current[key].isRunning = false;
     }
   };

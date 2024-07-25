@@ -13,13 +13,22 @@ import { Inspector } from 'tinybase/ui-react-inspector';
 
 const SERVER = 'localhost:8787';
 const SERVER_PROTOCOL = 'ws';
-export default function Store({ children }: { children: React.ReactNode }) {
+export default function Store({
+  children,
+  id,
+}: {
+  children: React.ReactNode;
+  id: string;
+}) {
   const serverPathId = usePathname();
   const store = useCreateMergeableStore(() => createMergeableStore());
   useCreatePersister(
     store,
     (store) =>
-      createSessionPersister(store, 'local://' + SERVER + serverPathId),
+      createSessionPersister(
+        store,
+        'local://' + SERVER + (`/${id}` || serverPathId),
+      ),
     [],
 
     async (persister) => {
@@ -36,7 +45,9 @@ export default function Store({ children }: { children: React.ReactNode }) {
   useCreateSynchronizer(store, async (store: MergeableStore) => {
     const synchronizer = await createWsSynchronizer(
       store,
-      new WebSocket(SERVER_PROTOCOL + '://' + SERVER + serverPathId),
+      new WebSocket(
+        SERVER_PROTOCOL + '://' + SERVER + (`/${id}` || serverPathId),
+      ),
       1,
     );
     await synchronizer.startSync();
