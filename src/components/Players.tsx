@@ -205,7 +205,7 @@ export default function Players() {
             onClick={() => {
               handlePlayPause(player);
             }}
-            className="join-item flex grow items-center justify-between rounded border border-primary px-4"
+            className={`join-item flex grow items-center justify-between rounded border px-4 ${player.playing ? 'border-success' : 'border-primary'}`}
           >
             <p>
               {player.name}{' '}
