@@ -101,6 +101,8 @@ export default function Players() {
     for (const player of players) {
       handleUpdatePlayer({
         ...player,
+        positions: '',
+        playing: false,
         time: 0,
       });
     }
