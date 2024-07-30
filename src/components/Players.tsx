@@ -9,6 +9,7 @@ import {
 } from 'tinybase/ui-react';
 import { SortedTableInHtmlTable } from 'tinybase/ui-react-dom';
 import useMultiTimer from '~/hooks/useMultiTimer';
+import useNetworkStatus from '~/hooks/useNetworkStatus';
 import { formatMilliseconds } from '~/utils/format';
 
 type Player = {
@@ -19,6 +20,7 @@ type Player = {
 };
 export default function Players() {
   const times = useRef<Record<string, HTMLParagraphElement | null>>({});
+  const networkIsOnline = useNetworkStatus();
   const playersStore = useTable('players');
   const [sortBy, setSortBy] = useState('name');
   const { getElapsedTime, isTimerRunning, setTimer } = useMultiTimer();
@@ -87,14 +89,14 @@ export default function Players() {
   useEffect(() => {
     const updateTimersInterval = setInterval(() => {
       for (const player of players) {
-        if (player.playing) {
+        if (player.playing && networkIsOnline) {
           handleUpdatePlayer({
             ...player,
             time: getElapsedTime(player.key),
           });
         }
       }
-    }, 1000);
+    }, 5000);
 
     const updateDomInterval = setInterval(() => {
       for (const player of players) {
@@ -110,21 +112,37 @@ export default function Players() {
       clearInterval(updateTimersInterval);
       clearInterval(updateDomInterval);
     };
-  }, [getElapsedTime, handleUpdatePlayer, isTimerRunning, players]);
+  }, [
+    getElapsedTime,
+    handleUpdatePlayer,
+    isTimerRunning,
+    networkIsOnline,
+    players,
+  ]);
 
   const handlePlayPause = useCallback(
-    (player: Player) => {
-      const key = player.key;
-
-      if (player) {
+    (player?: Player) => {
+      if (player && (networkIsOnline || !player.playing)) {
+        const key = player.key;
         handleUpdatePlayer({
           ...player,
           time: getElapsedTime(key),
           playing: !player.playing,
         });
+      } else if (!player && networkIsOnline) {
+        for (const player of players) {
+          if (player.playing) {
+            const key = player.key;
+            handleUpdatePlayer({
+              ...player,
+              time: getElapsedTime(key),
+              playing: !player.playing,
+            });
+          }
+        }
       }
     },
-    [handleUpdatePlayer, getElapsedTime],
+    [networkIsOnline, handleUpdatePlayer, getElapsedTime, players],
   );
 
   const handleAddPlayer = useAddRowCallback('players', (name) => {
@@ -139,24 +157,38 @@ export default function Players() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <button
-        type="button"
-        onClick={() => {
-          if (sortBy === 'name') {
-            setSortBy('time');
-          } else {
-            setSortBy('name');
-          }
-        }}
-        className="btn btn-secondary max-w-fit"
-      >
-        {sortBy === 'name' ? 'Name' : 'Time'}
-        <i className="iconify text-2xl icon-park--sort-amount-down"></i>
-      </button>
+      <div className="flex justify-between">
+        <button
+          type="button"
+          onClick={() => {
+            if (sortBy === 'name') {
+              setSortBy('time');
+            } else {
+              setSortBy('name');
+            }
+          }}
+          className="btn btn-secondary max-w-fit"
+        >
+          {sortBy === 'name' ? 'Name' : 'Time'}
+          <i className="iconify text-2xl icon-park--sort-amount-down"></i>
+        </button>
+
+        <button
+          type="button"
+          disabled={!networkIsOnline || !players.find((p) => p.playing)}
+          onClick={() => {
+            handlePlayPause();
+          }}
+          className="btn btn-square btn-accent join-item items-center"
+        >
+          <i className="iconify text-4xl icon-park-outline--pause"></i>
+        </button>
+      </div>
       {playersSorted.map((player) => (
         <div className="join w-full" key={player.key}>
           <button
             type="button"
+            disabled={!networkIsOnline}
             onClick={() => {
               handlePlayPause(player);
             }}
@@ -174,6 +206,7 @@ export default function Players() {
           </button>
           <button
             type="button"
+            disabled={!networkIsOnline && player.playing}
             onClick={() => {
               handlePlayPause(player);
             }}

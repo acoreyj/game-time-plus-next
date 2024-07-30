@@ -11,8 +11,10 @@ import {
 } from 'tinybase/ui-react';
 import { Inspector } from 'tinybase/ui-react-inspector';
 
-const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
-const SERVER_PROTOCOL = 'wss';
+const SERVER = 'localhost:8787';
+const SERVER_PROTOCOL = 'ws';
+// const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
+// const SERVER_PROTOCOL = 'wss';
 export default function Store({
   children,
   id,
@@ -49,8 +51,19 @@ export default function Store({
         SERVER_PROTOCOL + '://' + SERVER + (`/${id}` || serverPathId),
       ),
       1,
+      (clientId, requestId, msg, body) => {
+        console.log('sent', msg, body);
+      },
+      (clientId, requestId, msg, body) => {
+        console.log('received', msg, body);
+      },
+      (error) => {
+        console.log('error', error);
+      },
     );
+
     await synchronizer.startSync();
+
     return synchronizer;
   });
 
