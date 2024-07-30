@@ -190,6 +190,18 @@ export default function Players() {
 
   return (
     <div className="flex w-full flex-col gap-4">
+      {!networkIsOnline && synchronizer?.getWebSocket() ? (
+        <div className="flex w-full items-center gap-4 rounded bg-error p-8 text-2xl font-bold text-error-content">
+          <p>You are offline.</p>
+          <button
+            className="btn items-center"
+            type="button"
+            onClick={() => window.location.reload()}
+          >
+            Refresh <i className="iconify text-2xl icon-park--refresh"></i>
+          </button>
+        </div>
+      ) : null}
       <div className="flex justify-between">
         <button
           type="button"
@@ -208,7 +220,7 @@ export default function Players() {
 
         <button
           type="button"
-          disabled={!networkIsOnline || !players.find((p) => p.playing)}
+          disabled={!networkIsOnline}
           onClick={() => {
             handlePlayPause();
           }}
