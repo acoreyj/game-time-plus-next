@@ -11,10 +11,10 @@ import {
 } from 'tinybase/ui-react';
 import { Inspector } from 'tinybase/ui-react-inspector';
 
-const SERVER = 'localhost:8787';
-const SERVER_PROTOCOL = 'ws';
-// const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
-// const SERVER_PROTOCOL = 'wss';
+// const SERVER = 'localhost:8787';
+// const SERVER_PROTOCOL = 'ws';
+const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
+const SERVER_PROTOCOL = 'wss';
 export default function Store({
   children,
   id,
