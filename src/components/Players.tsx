@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useAddRowCallback,
+  useDelRowCallback,
   useHasTables,
   useSetTableCallback,
   useStore,
@@ -15,6 +16,7 @@ import { formatMilliseconds } from '~/utils/format';
 type Player = {
   key: string;
   name: string;
+  positions?: string;
   time?: number;
   playing?: boolean;
 };
@@ -153,8 +155,19 @@ export default function Players() {
     };
   });
 
+  const handleDelPlayer = useDelRowCallback('players', (player: Player) => {
+    return player.key;
+  });
   const [showResetBtn, setShowResetBtn] = useState(false);
 
+  const [showDelBtn, setShowDelBtn] = useState(false);
+  useEffect(() => {
+    if (showDelBtn) {
+      setTimeout(() => {
+        setShowDelBtn(false);
+      }, 3000);
+    }
+  }, [showDelBtn]);
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex justify-between">
@@ -194,7 +207,12 @@ export default function Players() {
             }}
             className="join-item flex grow items-center justify-between rounded border border-primary px-4"
           >
-            {player.name}
+            <p>
+              {player.name}{' '}
+              {player.positions
+                ? ` (${player.positions.split('').join(' ')})`
+                : ''}
+            </p>
             <p
               ref={(el) => {
                 times.current[player.key] = el;
@@ -204,6 +222,101 @@ export default function Players() {
               {formatMilliseconds(getElapsedTime(player.key))}
             </p>
           </button>
+          <div className="dropdown dropdown-end join-item">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-square btn-accent join-item items-center"
+            >
+              <i className="iconify text-4xl icon-park--application-menu"></i>
+            </div>
+            <ul className="menu dropdown-content z-10 gap-4 border-2 border-accent bg-base-300 p-2 shadow">
+              <li>
+                <button
+                  onClick={() => {
+                    const positions = player.positions?.includes('G')
+                      ? player.positions.replace('G', '')
+                      : (player.positions ?? '') + 'G';
+                    handleUpdatePlayer({
+                      ...player,
+                      positions,
+                    });
+                  }}
+                  className={`btn ${player.positions?.includes('G') ? 'btn-success' : ''}`}
+                >
+                  G
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => {
+                    const positions = player.positions?.includes('D')
+                      ? player.positions.replace('D', '')
+                      : (player.positions ?? '') + 'D';
+                    handleUpdatePlayer({
+                      ...player,
+                      positions,
+                    });
+                  }}
+                  className={`btn ${player.positions?.includes('D') ? 'btn-success' : ''}`}
+                >
+                  D
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    const positions = player.positions?.includes('M')
+                      ? player.positions.replace('M', '')
+                      : (player.positions ?? '') + 'M';
+                    handleUpdatePlayer({
+                      ...player,
+                      positions,
+                    });
+                  }}
+                  className={`btn ${player.positions?.includes('M') ? 'btn-success' : ''}`}
+                >
+                  M
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    const positions = player.positions?.includes('F')
+                      ? player.positions.replace('F', '')
+                      : (player.positions ?? '') + 'F';
+                    handleUpdatePlayer({
+                      ...player,
+                      positions,
+                    });
+                  }}
+                  className={`btn ${player.positions?.includes('F') ? 'btn-success' : ''}`}
+                >
+                  F
+                </button>
+              </li>
+              <li>
+                {showDelBtn ? (
+                  <button
+                    onClick={() => {
+                      handleDelPlayer(player);
+                    }}
+                    className="btn btn-error"
+                  >
+                    Sure?
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowDelBtn(true)}
+                    className="btn btn-error"
+                  >
+                    Delete
+                  </button>
+                )}
+              </li>
+            </ul>
+          </div>
           <button
             type="button"
             disabled={!networkIsOnline && player.playing}
