@@ -12,6 +12,7 @@ import { SortedTableInHtmlTable } from 'tinybase/ui-react-dom';
 import useMultiTimer from '~/hooks/useMultiTimer';
 import useNetworkStatus from '~/hooks/useNetworkStatus';
 import { formatMilliseconds } from '~/utils/format';
+import { useStoreContext } from './Store';
 
 type Player = {
   key: string;
@@ -22,6 +23,7 @@ type Player = {
 };
 export default function Players() {
   const times = useRef<Record<string, HTMLParagraphElement | null>>({});
+  const { synchronizer } = useStoreContext();
   const networkIsOnline = useNetworkStatus();
   const playersStore = useTable('players');
   const [sortBy, setSortBy] = useState('name');
@@ -168,6 +170,15 @@ export default function Players() {
       }, 3000);
     }
   }, [showDelBtn]);
+
+  const [readyState, setReadyState] = useState<number | null>(null);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setReadyState(synchronizer?.getWebSocket().readyState ?? null);
+    }, 500);
+    setReadyState(synchronizer?.getWebSocket().readyState ?? null);
+    return () => clearInterval(timer);
+  }, [synchronizer]);
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex justify-between">
@@ -373,6 +384,18 @@ export default function Players() {
           </button>
         )}
       </div>
+      {showResetBtn && (
+        <div className="flex flex-col">
+          <span>Web socket</span>
+          <span>exists: {(!!synchronizer?.getWebSocket()).toString()}</span>
+          <span>
+            Connecting: {(readyState === WebSocket.CONNECTING).toString()}
+          </span>
+          <span>Open: {(readyState === WebSocket.OPEN).toString()}</span>
+          <span>Closing: {(readyState === WebSocket.CLOSING).toString()}</span>
+          <span>Closed: {(readyState === WebSocket.CLOSED).toString()}</span>
+        </div>
+      )}
     </div>
   );
 }

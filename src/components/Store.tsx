@@ -1,8 +1,19 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { createMergeableStore, type MergeableStore } from 'tinybase';
-import { createSessionPersister } from 'tinybase/persisters/persister-browser';
-import { createWsSynchronizer } from 'tinybase/synchronizers/synchronizer-ws-client';
+import { createContext, useContext } from 'react';
+import {
+  createMergeableStore,
+  type Synchronizer,
+  type MergeableStore,
+} from 'tinybase';
+import {
+  createSessionPersister,
+  type SessionPersister,
+} from 'tinybase/persisters/persister-browser';
+import {
+  createWsSynchronizer,
+  WsSynchronizer,
+} from 'tinybase/synchronizers/synchronizer-ws-client';
 import {
   Provider,
   useCreateMergeableStore,
@@ -24,7 +35,7 @@ export default function Store({
 }) {
   const serverPathId = usePathname();
   const store = useCreateMergeableStore(() => createMergeableStore());
-  useCreatePersister(
+  const persister = useCreatePersister(
     store,
     (store) =>
       createSessionPersister(
@@ -44,33 +55,45 @@ export default function Store({
     },
   );
 
-  useCreateSynchronizer(store, async (store: MergeableStore) => {
-    const synchronizer = await createWsSynchronizer(
-      store,
-      new WebSocket(
-        SERVER_PROTOCOL + '://' + SERVER + (`/${id}` || serverPathId),
-      ),
-      1,
-      (clientId, requestId, msg, body) => {
-        console.log('sent', msg, body);
-      },
-      (clientId, requestId, msg, body) => {
-        console.log('received', msg, body);
-      },
-      (error) => {
-        console.log('error', error);
-      },
-    );
+  const synchronizer = useCreateSynchronizer(
+    store,
+    async (store: MergeableStore) => {
+      const synchronizer = await createWsSynchronizer(
+        store,
+        new WebSocket(
+          SERVER_PROTOCOL + '://' + SERVER + (`/${id}` || serverPathId),
+        ),
+        1,
+        (clientId, requestId, msg, body) => {
+          console.log('sent', msg, body);
+        },
+        (clientId, requestId, msg, body) => {
+          console.log('received', msg, body);
+        },
+        (error) => {
+          console.log('error', error);
+        },
+      );
 
-    await synchronizer.startSync();
+      await synchronizer.startSync();
 
-    return synchronizer;
-  });
+      return synchronizer;
+    },
+  );
 
   return (
     <Provider store={store}>
-      <Inspector />
-      {children}
+      <StoreContext.Provider value={{ persister, synchronizer }}>
+        <Inspector />
+        {children}
+      </StoreContext.Provider>
     </Provider>
   );
 }
+
+export type StoreContextProps = {
+  persister?: SessionPersister;
+  synchronizer?: WsSynchronizer<WebSocket>;
+};
+export const StoreContext = createContext<StoreContextProps>({});
+export const useStoreContext = () => useContext(StoreContext);
