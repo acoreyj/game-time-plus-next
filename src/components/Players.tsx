@@ -351,7 +351,7 @@ export default function Players() {
           </div>
           <button
             type="button"
-            disabled={!networkIsOnline && player.playing}
+            disabled={!networkIsOnline}
             onClick={() => {
               handlePlayPause(player);
             }}
