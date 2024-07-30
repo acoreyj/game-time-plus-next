@@ -24,7 +24,24 @@ type Player = {
 export default function Players() {
   const times = useRef<Record<string, HTMLParagraphElement | null>>({});
   const { synchronizer } = useStoreContext();
-  const networkIsOnline = useNetworkStatus();
+  const networkIsConnected = useNetworkStatus();
+
+  const [readyState, setReadyState] = useState<number | null>(null);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setReadyState(synchronizer?.getWebSocket().readyState ?? null);
+    }, 500);
+    setReadyState(synchronizer?.getWebSocket().readyState ?? null);
+    return () => clearInterval(timer);
+  }, [synchronizer]);
+  const networkIsOnline = useMemo(
+    () =>
+      networkIsConnected &&
+      readyState !== WebSocket.CLOSING &&
+      readyState !== WebSocket.CLOSED,
+    [readyState, networkIsConnected],
+  );
+
   const playersStore = useTable('players');
   const [sortBy, setSortBy] = useState('name');
   const { getElapsedTime, isTimerRunning, setTimer } = useMultiTimer();
@@ -171,14 +188,6 @@ export default function Players() {
     }
   }, [showDelBtn]);
 
-  const [readyState, setReadyState] = useState<number | null>(null);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setReadyState(synchronizer?.getWebSocket().readyState ?? null);
-    }, 500);
-    setReadyState(synchronizer?.getWebSocket().readyState ?? null);
-    return () => clearInterval(timer);
-  }, [synchronizer]);
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex justify-between">
