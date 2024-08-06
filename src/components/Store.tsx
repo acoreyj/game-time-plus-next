@@ -7,7 +7,7 @@ import {
   type MergeableStore,
 } from 'tinybase';
 import {
-  createSessionPersister,
+  createLocalPersister,
   type SessionPersister,
 } from 'tinybase/persisters/persister-browser';
 import {
@@ -38,7 +38,7 @@ export default function Store({
   const persister = useCreatePersister(
     store,
     (store) =>
-      createSessionPersister(
+      createLocalPersister(
         store,
         'local://' + SERVER + (`/${id}` || serverPathId),
       ),
