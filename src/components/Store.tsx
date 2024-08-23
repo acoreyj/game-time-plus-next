@@ -1,18 +1,14 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext } from 'react';
-import {
-  createMergeableStore,
-  type Synchronizer,
-  type MergeableStore,
-} from 'tinybase';
+import { createMergeableStore, type MergeableStore } from 'tinybase';
 import {
   createLocalPersister,
   type SessionPersister,
 } from 'tinybase/persisters/persister-browser';
 import {
   createWsSynchronizer,
-  WsSynchronizer,
+  type WsSynchronizer,
 } from 'tinybase/synchronizers/synchronizer-ws-client';
 import {
   Provider,
@@ -22,10 +18,10 @@ import {
 } from 'tinybase/ui-react';
 import { Inspector } from 'tinybase/ui-react-inspector';
 
-// const SERVER = 'localhost:8787';
-// const SERVER_PROTOCOL = 'ws';
-const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
-const SERVER_PROTOCOL = 'wss';
+const SERVER = 'localhost:8787';
+const SERVER_PROTOCOL = 'ws';
+// const SERVER = 'tinybase-cf-server.geniecode.workers.dev';
+// const SERVER_PROTOCOL = 'wss';
 export default function Store({
   children,
   id,

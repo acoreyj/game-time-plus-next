@@ -3,12 +3,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useAddRowCallback,
   useDelRowCallback,
-  useHasTables,
   useSetTableCallback,
-  useStore,
   useTable,
 } from 'tinybase/ui-react';
-import { SortedTableInHtmlTable } from 'tinybase/ui-react-dom';
 import useMultiTimer from '~/hooks/useMultiTimer';
 import useNetworkStatus from '~/hooks/useNetworkStatus';
 import { formatMilliseconds } from '~/utils/format';
