@@ -184,7 +184,7 @@ export default function Players() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
         <Button
           variant="outline"
           type="button"
@@ -195,10 +195,10 @@ export default function Players() {
               setSortBy("name");
             }
           }}
-          className="max-w-fit"
+          className="bg-card shadow-sm hover:bg-card/80"
         >
-          {sortBy === "name" ? "Name" : "Time"}
-          <ArrowDownAZ size={24} className="ml-2" />
+          Sort by: {sortBy === "name" ? "Name" : "Time"}
+          <ArrowDownAZ size={20} className="ml-2" />
         </Button>
 
         <Button
@@ -208,163 +208,193 @@ export default function Players() {
             handlePlayPause();
           }}
           size="icon"
-          className="h-14 w-14"
+          className="h-10 w-10 bg-card shadow-sm hover:bg-card/80"
         >
-          <Pause className="size-12" />
+          <Pause className="size-5" />
         </Button>
       </div>
-      {playersSorted.map((player) => (
-        <div className="flex w-full" key={player.key}>
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => {
-              handlePlayPause(player);
-            }}
-            className={`flex h-auto grow items-center justify-between rounded px-4 py-2 ${
-              player.playing ? "border-green-500" : "border-blue-500"
-            }`}
-          >
-            <p>
-              {player.name}{" "}
-              {player.positions
-                ? ` (${player.positions.split("").join(" ")})`
-                : ""}
-            </p>
-            <p
-              ref={(el) => {
-                times.current[player.key] = el;
-              }}
-              className="font-time text-4xl"
-            >
-              {formatMilliseconds(getElapsedTime(player.key))}
-            </p>
-          </Button>
-          <DropdownMenu open={showDelBtn ? true : undefined}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="h-16 w-16 ml-1">
-                <Menu className="size-8" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="flex flex-col gap-2 p-2">
-              <DropdownMenuItem asChild>
-                <Button
-                  variant={
-                    player.positions?.includes("G") ? "default" : "outline"
-                  }
-                  onClick={() => {
-                    const positions = player.positions?.includes("G")
-                      ? player.positions.replace("G", "")
-                      : (player.positions ?? "") + "G";
-                    handleUpdatePlayer({
-                      ...player,
-                      positions,
-                    });
-                  }}
-                  className="w-full"
-                >
-                  G
-                </Button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <Button
-                  variant={
-                    player.positions?.includes("D") ? "default" : "outline"
-                  }
-                  onClick={() => {
-                    const positions = player.positions?.includes("D")
-                      ? player.positions.replace("D", "")
-                      : (player.positions ?? "") + "D";
-                    handleUpdatePlayer({
-                      ...player,
-                      positions,
-                    });
-                  }}
-                  className="w-full"
-                >
-                  D
-                </Button>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Button
-                  variant={
-                    player.positions?.includes("M") ? "default" : "outline"
-                  }
-                  onClick={() => {
-                    const positions = player.positions?.includes("M")
-                      ? player.positions.replace("M", "")
-                      : (player.positions ?? "") + "M";
-                    handleUpdatePlayer({
-                      ...player,
-                      positions,
-                    });
-                  }}
-                  className="w-full"
-                >
-                  M
-                </Button>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Button
-                  variant={
-                    player.positions?.includes("F") ? "default" : "outline"
-                  }
-                  onClick={() => {
-                    const positions = player.positions?.includes("F")
-                      ? player.positions.replace("F", "")
-                      : (player.positions ?? "") + "F";
-                    handleUpdatePlayer({
-                      ...player,
-                      positions,
-                    });
-                  }}
-                  className="w-full"
-                >
-                  F
-                </Button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    handleDelPlayer(player);
-                  }}
-                  className="w-full"
-                >
-                  Delete
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => {
-              handlePlayPause(player);
-            }}
-            size="icon"
-            className="h-16 w-16 ml-1"
-          >
-            {player.playing ? (
-              <Pause className="size-8" />
-            ) : (
-              <Play className="size-8" />
+      <div className="space-y-2">
+        {playersSorted.map((player, index) => (
+          <div
+            className={cn(
+              "flex w-full rounded-lg overflow-hidden shadow-sm",
+              index % 2 === 0 ? "bg-muted" : "bg-card"
             )}
-          </Button>
-        </div>
-      ))}
+            key={player.key}
+          >
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => {
+                handlePlayPause(player);
+              }}
+              className={cn(
+                "flex h-auto grow items-center justify-between rounded-none border-0 px-4 py-3",
+                player.playing
+                  ? "border-l-4 border-l-green-500"
+                  : "border-l-4 border-l-blue-500",
+                index % 2 === 0
+                  ? "bg-muted hover:bg-muted/80"
+                  : "bg-card hover:bg-card/80"
+              )}
+            >
+              <div className="flex items-center">
+                <p className="font-medium">{player.name}</p>
+                {player.positions && (
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    ({player.positions.split("").join(" ")})
+                  </span>
+                )}
+              </div>
+              <p
+                ref={(el) => {
+                  times.current[player.key] = el;
+                }}
+                className="font-time text-4xl"
+              >
+                {formatMilliseconds(getElapsedTime(player.key))}
+              </p>
+            </Button>
+            <DropdownMenu open={showDelBtn ? true : undefined}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    "h-16 w-16 rounded-none border-0",
+                    index % 2 === 0
+                      ? "bg-muted hover:bg-muted/80"
+                      : "bg-card hover:bg-card/80"
+                  )}
+                >
+                  <Menu className="size-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="flex flex-col gap-2 p-2">
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant={
+                      player.positions?.includes("G") ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      const positions = player.positions?.includes("G")
+                        ? player.positions.replace("G", "")
+                        : (player.positions ?? "") + "G";
+                      handleUpdatePlayer({
+                        ...player,
+                        positions,
+                      });
+                    }}
+                    className="w-full"
+                  >
+                    G
+                  </Button>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant={
+                      player.positions?.includes("D") ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      const positions = player.positions?.includes("D")
+                        ? player.positions.replace("D", "")
+                        : (player.positions ?? "") + "D";
+                      handleUpdatePlayer({
+                        ...player,
+                        positions,
+                      });
+                    }}
+                    className="w-full"
+                  >
+                    D
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant={
+                      player.positions?.includes("M") ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      const positions = player.positions?.includes("M")
+                        ? player.positions.replace("M", "")
+                        : (player.positions ?? "") + "M";
+                      handleUpdatePlayer({
+                        ...player,
+                        positions,
+                      });
+                    }}
+                    className="w-full"
+                  >
+                    M
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant={
+                      player.positions?.includes("F") ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      const positions = player.positions?.includes("F")
+                        ? player.positions.replace("F", "")
+                        : (player.positions ?? "") + "F";
+                      handleUpdatePlayer({
+                        ...player,
+                        positions,
+                      });
+                    }}
+                    className="w-full"
+                  >
+                    F
+                  </Button>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      handleDelPlayer(player);
+                    }}
+                    className="w-full"
+                  >
+                    Delete
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => {
+                handlePlayPause(player);
+              }}
+              size="icon"
+              className={cn(
+                "h-16 w-16 rounded-none border-0",
+                index % 2 === 0
+                  ? "bg-muted hover:bg-muted/80"
+                  : "bg-card hover:bg-card/80"
+              )}
+            >
+              {player.playing ? (
+                <Pause className="size-6" />
+              ) : (
+                <Play className="size-6" />
+              )}
+            </Button>
+          </div>
+        ))}
+      </div>
       <div className="flex w-full">
         <form className="flex w-full" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex w-full">
+          <div className="flex w-full shadow-sm rounded-lg overflow-hidden">
             <Input
               onChange={(e) => {
                 setPlayerToAdd(e.target.value);
               }}
               minLength={1}
               value={playerToAdd}
-              className="rounded-r-none h-10"
+              className="rounded-none border-r-0 h-12 bg-card focus-visible:ring-0 focus-visible:ring-offset-0"
               type="text"
               placeholder="Player Name"
             />
@@ -376,25 +406,26 @@ export default function Players() {
                   setPlayerToAdd("");
                 }
               }}
-              size="icon"
-              className="h-10 w-10 rounded-l-none"
+              className="h-12 rounded-none px-4 bg-primary hover:bg-primary/90"
             >
-              <Plus size={24} />
+              <Plus size={20} className="mr-2" />
+              Add Player
             </Button>
           </div>
         </form>
       </div>
-      <div className="flex justify-start gap-8">
+      <div className="flex justify-start gap-4 mt-4">
         <Button
           variant="outline"
           onClick={() => setShowResetBtn(!showResetBtn)}
+          className="bg-card shadow-sm hover:bg-card/80"
         >
-          Reset
+          Reset Game
         </Button>
 
         {showResetBtn && (
-          <Button variant="destructive" onClick={reset}>
-            RESET!!!!
+          <Button variant="destructive" onClick={reset} className="shadow-sm">
+            Confirm Reset
           </Button>
         )}
       </div>
