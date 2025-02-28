@@ -1,42 +1,17 @@
 {
-  "name": "game-time-plus",
-  "version": "0.1.0",
+  "name": "game-time-plus-monorepo",
   "private": true,
+  "license": "MIT",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^4.1.2",
-    "@radix-ui/react-label": "^2.1.2",
-    "@radix-ui/react-slot": "^1.1.2",
-    "@types/uuid": "^10.0.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.476.0",
-    "next": "15.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-hook-form": "^7.54.2",
-    "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7",
-    "tinybase": "^5.4.8",
-    "uuid": "^11.1.0",
-    "zod": "^3.24.2"
+    "dev:game-time-plus": "pnpm --filter game-time-plus dev",
+    "dev:server": "pnpm --filter @sonicjs/tinybase-server dev",
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.0",
-    "prettier": "^3.5.2",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   }
 }

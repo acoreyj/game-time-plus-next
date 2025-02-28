@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\n  \"app\": {\n    \"[project]/packages/game-time-plus/src/app/team/[teamCity]/[teamName]/page\": [\n      \"static/media/LDIhapOFNxEwR_Bd1O9uYNmnUQomAgE25imKSbHLSMA6Sw_lSg-s.p.d6d3e612.woff2\"\n    ]\n  },\n  \"appUsingSizeAdjust\": true,\n  \"pages\": {},\n  \"pagesUsingSizeAdjust\": false\n}"

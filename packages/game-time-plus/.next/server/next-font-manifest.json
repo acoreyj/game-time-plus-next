@@ -1,0 +1,10 @@
+{
+  "app": {
+    "[project]/packages/game-time-plus/src/app/team/[teamCity]/[teamName]/page": [
+      "static/media/LDIhapOFNxEwR_Bd1O9uYNmnUQomAgE25imKSbHLSMA6Sw_lSg-s.p.d6d3e612.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}
