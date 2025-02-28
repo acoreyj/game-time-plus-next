@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Encode_Sans, Overpass_Mono } from "next/font/google";
+import { Encode_Sans } from "next/font/google";
 import "./globals.css";
-
 const encodeSans = Encode_Sans({
   subsets: ["latin"],
 });

@@ -1,10 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Game Time Plus
+
+A Next.js application with TinyBase for local state management.
+
+## TinyBase Implementation
+
+This project uses TinyBase for managing team names with local storage persistence. The implementation includes:
+
+- A TinyBase store with a teams table
+- Local storage persistence for the teams data
+- A custom React hook (`useTeams`) for easy integration with components
+
+### Key Files
+
+- `src/lib/store.ts` - Core TinyBase store implementation with localStorage persistence
+- `src/hooks/useTeams.ts` - Custom React hook for using the teams store
+- `src/components/TeamNameForm.tsx` - Example component using the TinyBase store
+
+### Usage
+
+The `TeamNameForm` component demonstrates how to use the TinyBase store to:
+1. Add new team names
+2. Display existing team names
+3. Persist data between page refreshes using localStorage
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
+npm install
 npm run dev
 # or
 yarn dev
