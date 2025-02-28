@@ -1,6 +1,12 @@
 # Game Time Plus
 
-A Next.js application with TinyBase for state management and real-time synchronization.
+A Local First Next.js application to track the play time of players on a team - with TinyBase for state management and real-time synchronization.
+
+**[🚀 Live Demo: https://game-time-plus-next.vercel.app](https://game-time-plus-next.vercel.app)**
+
+## Demo Video
+
+https://github.com/user/game-time-plus-next/assets/video/demo.mp4
 
 ## Project Structure
 
@@ -35,6 +41,16 @@ The application demonstrates how to use TinyBase to:
 3. Persist data between page refreshes using localStorage
 4. Synchronize data in real-time across multiple clients
 5. Manage player information for teams
+
+## API
+
+Game Time Plus includes a powerful API for accessing and manipulating team and player data.
+
+![API Content Example](assets/api_content.png)
+
+The API supports complex queries to filter and retrieve specific data:
+
+![API Query Example](assets/api_query.png)
 
 ## Getting Started
 
