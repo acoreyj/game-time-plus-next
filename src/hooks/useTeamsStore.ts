@@ -23,8 +23,10 @@ export function useTeamsStore() {
   );
 
   const addTeam = (name: string, city: string) => {
-    const teamName = unSlugify(slugify(name));
-    const teamCity = unSlugify(slugify(city));
+    const sluggedName = slugify(name);
+    const sluggedCity = slugify(city);
+    const teamName = unSlugify(sluggedName);
+    const teamCity = unSlugify(sluggedCity);
     const teamId = slugify(teamName + teamCity);
     const rows = store.getRowIds("teams");
     const teamExists = rows.find(
@@ -37,12 +39,23 @@ export function useTeamsStore() {
         city: teamCity,
       });
     }
-    return { teamName, teamCity, teamId };
+    return { teamName, teamCity, teamId, sluggedName, sluggedCity };
+  };
+
+  const deleteTeam = (teamId: string) => {
+    const rows = store.getRowIds("teams");
+    const teamExists = rows.find(
+      (row) => store.getCell("teams", row, "id") === teamId
+    );
+    if (teamExists) {
+      store?.delRow("teams", teamExists);
+    }
   };
 
   return {
     store,
     persister,
     addTeam,
+    deleteTeam,
   };
 }

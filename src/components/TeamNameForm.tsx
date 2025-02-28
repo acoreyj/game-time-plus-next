@@ -21,13 +21,14 @@ import { useTeamsStore } from "@/hooks/useTeamsStore";
 import { slugify, unSlugify } from "@/utils/format";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 const formSchema = z.object({
   teamName: z.string().min(1),
   teamCity: z.string().min(1),
 });
 
 export function TeamNameForm() {
-  const { store, addTeam } = useTeamsStore();
+  const { store, addTeam, deleteTeam } = useTeamsStore();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,9 +38,12 @@ export function TeamNameForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     form.reset();
-    const { teamName, teamCity } = addTeam(values.teamName, values.teamCity);
+    const { sluggedName, sluggedCity } = addTeam(
+      values.teamName,
+      values.teamCity
+    );
 
-    router.push(`/team/${teamCity}/${teamName}`);
+    router.push(`/team/${sluggedCity}/${sluggedName}`);
   }
 
   const hasTeams = useMemo(() => Object.keys(teams).length > 0, [teams]);
@@ -93,7 +97,17 @@ export function TeamNameForm() {
           <h2 className="text-xl font-bold mb-4">Saved Teams</h2>
           <ul className="space-y-2">
             {Object.values(teams).map((team) => (
-              <li key={team.name.toString()} className="m-0">
+              <li
+                key={team.name.toString()}
+                className="m-0 flex items-center gap-2"
+              >
+                <button
+                  className="p-0 hover:bg-primary/10 rounded-full hover:cursor-pointer"
+                  onClick={() => deleteTeam(team.id.toString())}
+                >
+                  <Trash2 size={24} />
+                </button>
+
                 <Button className="p-0 " variant="link" asChild>
                   <Link
                     href={`/team/${slugify(team.city)}/${slugify(team.name)}`}
