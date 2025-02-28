@@ -8,14 +8,17 @@ export default function Page(props: {
 }) {
   const params = use(props.params);
   const { addTeam } = useTeamsStore();
-  const { teamName, teamCity } = addTeam(params.teamName, params.teamCity);
+  const { teamId, teamName, teamCity } = addTeam(
+    params.teamName,
+    params.teamCity,
+  );
   return (
     <div className="mb-16 mt-16 flex min-h-screen justify-center lg:mb-0 lg:mt-0 lg:items-center">
       <main className="flex w-full max-w-4xl flex-col items-center gap-8 px-4">
         <h1 className="text-2xl font-bold">
           {teamName} - {teamCity}
         </h1>
-        <Store id={`${teamCity}/${teamName}`}>
+        <Store id={`${teamId}`}>
           <Players />
         </Store>
       </main>

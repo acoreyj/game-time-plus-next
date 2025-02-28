@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev:game-time-plus": "pnpm --filter game-time-plus dev",
-    "dev:server": "pnpm --filter @sonicjs/tinybase-server dev",
+    "dev:server": "pnpm --filter game-time-plus-tinybase-server dev",
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",

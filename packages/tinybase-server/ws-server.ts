@@ -43,6 +43,7 @@ export class TinyBaseDurableObject extends WsServerDurableObject {
 
   createPersister() {
     if (PERSIST_TO_DURABLE_OBJECT) {
+      console.log("Creating persister");
       this.store = this.store ?? createMergeableStore();
       return createDurableObjectStoragePersister(this.store, this.ctx.storage);
     }
