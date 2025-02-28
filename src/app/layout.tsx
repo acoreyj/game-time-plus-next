@@ -18,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${encodeSans.className} antialiased dark`}>
-        {children}
+
+        <div className="flex justify-center items-center min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );
