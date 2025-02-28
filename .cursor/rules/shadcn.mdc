@@ -1,0 +1,10 @@
+---
+description: shadcn component
+globs: 
+alwaysApply: false
+---
+Use shadcn for components, you can add components using the CLI, such as for accordion run the command `pnpm dlx shadcn@canary add accordion`
+
+List of components can be found in the left nav at https://ui.shadcn.com/docs/components
+
+If you find linting errors like Cannot find module '@/components/ui/input' or its corresponding type declarations.ts add the shadcn component by running the command for the correct component for example `pnpm dlx shadcn@canary add input`
