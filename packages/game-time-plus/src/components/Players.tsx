@@ -106,7 +106,7 @@ export default function Players() {
           });
         }
       }
-    }, 1000);
+    }, 2000);
 
     const updateDomInterval = setInterval(() => {
       for (const player of players) {
