@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
 const useMultiTimer = () => {
   const timers = useRef<
@@ -25,7 +25,6 @@ const useMultiTimer = () => {
   };
   const setTimer = (key: string, time = 0, running = false) => {
     timers.current[key] = {
-      intervalId: null,
       ...(timers.current[key] ?? {}),
       isRunning: running,
       elapsedTime: time,

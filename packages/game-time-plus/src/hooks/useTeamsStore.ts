@@ -1,6 +1,6 @@
 import { unSlugify } from "@/utils/format";
 import { slugify } from "@/utils/format";
-import { createMergeableStore, type MergeableStore } from "tinybase";
+import { createMergeableStore } from "tinybase";
 import { createLocalPersister } from "tinybase/persisters/persister-browser";
 
 import { useCreateMergeableStore, useCreatePersister } from "tinybase/ui-react";
@@ -19,7 +19,7 @@ export function useTeamsStore() {
         {},
       ]);
       await persister.startAutoSave();
-    }
+    },
   );
 
   const addTeam = (name: string, city: string) => {
@@ -30,7 +30,7 @@ export function useTeamsStore() {
     const teamId = slugify(teamName + teamCity);
     const rows = store.getRowIds("teams");
     const teamExists = rows.find(
-      (row) => store.getCell("teams", row, "id") === teamId
+      (row) => store.getCell("teams", row, "id") === teamId,
     );
     if (!teamExists) {
       store?.addRow("teams", {
@@ -45,7 +45,7 @@ export function useTeamsStore() {
   const deleteTeam = (teamId: string) => {
     const rows = store.getRowIds("teams");
     const teamExists = rows.find(
-      (row) => store.getCell("teams", row, "id") === teamId
+      (row) => store.getCell("teams", row, "id") === teamId,
     );
     if (teamExists) {
       store?.delRow("teams", teamExists);

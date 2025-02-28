@@ -1,10 +1,8 @@
-import Image from "next/image";
 import { TeamNameForm } from "../components/TeamNameForm";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Attributes, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTable } from "tinybase/ui-react";
 import { useTeamsStore } from "@/hooks/useTeamsStore";
-import { slugify, unSlugify } from "@/utils/format";
+import { slugify } from "@/utils/format";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
@@ -40,7 +40,7 @@ export function TeamNameForm() {
     form.reset();
     const { sluggedName, sluggedCity } = addTeam(
       values.teamName,
-      values.teamCity
+      values.teamCity,
     );
 
     router.push(`/team/${sluggedCity}/${sluggedName}`);
@@ -94,7 +94,7 @@ export function TeamNameForm() {
 
       {hasTeams && (
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Saved Teams</h2>
+          <h2 className="mb-4 text-xl font-bold">Saved Teams</h2>
           <ul className="space-y-2">
             {Object.values(teams).map((team) => (
               <li
@@ -102,13 +102,13 @@ export function TeamNameForm() {
                 className="m-0 flex items-center gap-2"
               >
                 <button
-                  className="p-0 hover:bg-primary/10 rounded-full hover:cursor-pointer"
+                  className="hover:bg-primary/10 rounded-full p-0 hover:cursor-pointer"
                   onClick={() => deleteTeam(team.id.toString())}
                 >
                   <Trash2 size={24} />
                 </button>
 
-                <Button className="p-0 " variant="link" asChild>
+                <Button className="p-0" variant="link" asChild>
                   <Link
                     href={`/team/${slugify(team.city)}/${slugify(team.name)}`}
                   >
