@@ -6,7 +6,7 @@ A Local First Next.js application to track the play time of players on a team - 
 
 ## Demo Video
 
-https://github.com/user/game-time-plus-next/assets/video/demo.mp4
+https://github.com/acoreyj/game-time-plus-next/blob/main/assets/Game-Time-Plus-Demo.mp4
 
 ## Project Structure
 
