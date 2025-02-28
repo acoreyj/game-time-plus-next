@@ -5,7 +5,7 @@ A Local First Next.js application to track the play time of players on a team - 
 **[🚀 Live Demo: https://game-time-plus-next.vercel.app](https://game-time-plus-next.vercel.app)**
 
 
-![Game Time Plus](assets/game_time_plus.png)
+![Game Time Plus](assets/game_time.png)
 
 ## Demo Video
 
