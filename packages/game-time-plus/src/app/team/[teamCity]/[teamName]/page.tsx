@@ -10,13 +10,15 @@ export default function Page(props: {
   const { addTeam } = useTeamsStore();
   const { teamName, teamCity } = addTeam(params.teamName, params.teamCity);
   return (
-    <main className="flex flex-col gap-8 items-center w-full max-w-4xl px-4">
-      <h1>
-        {teamName} - {teamCity}
+    <div className="mb-16 mt-16 flex min-h-screen justify-center lg:mb-0 lg:mt-0 lg:items-center">
+      <main className="flex w-full max-w-4xl flex-col items-center gap-8 px-4">
+        <h1 className="text-2xl font-bold">
+          {teamName} - {teamCity}
+        </h1>
         <Store id={`${teamCity}/${teamName}`}>
           <Players />
         </Store>
-      </h1>
-    </main>
+      </main>
+    </div>
   );
 }

@@ -7,9 +7,7 @@ import {
   useTable,
 } from "tinybase/ui-react";
 import useMultiTimer from "@/hooks/useMultiTimer";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { formatMilliseconds } from "@/utils/format";
-import { useStoreContext } from "./Store";
 import { ArrowDownAZ, Pause, Menu, Play, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,16 +28,7 @@ type Player = {
 };
 export default function Players() {
   const times = useRef<Record<string, HTMLParagraphElement | null>>({});
-  const { synchronizer } = useStoreContext();
 
-  const [readyState, setReadyState] = useState<number | null>(null);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setReadyState(synchronizer?.getWebSocket().readyState ?? null);
-    }, 500);
-    setReadyState(synchronizer?.getWebSocket().readyState ?? null);
-    return () => clearInterval(timer);
-  }, [synchronizer]);
   const playersStore = useTable("players");
   const [sortBy, setSortBy] = useState("name");
   const { getElapsedTime, isTimerRunning, setTimer } = useMultiTimer();
@@ -71,7 +60,7 @@ export default function Players() {
 
   const playersSorted = useMemo(
     () => (sortBy === "name" ? playersSortedByName : playersSortedByTime),
-    [sortBy, playersSortedByName, playersSortedByTime]
+    [sortBy, playersSortedByName, playersSortedByTime],
   );
 
   const [playerToAdd, setPlayerToAdd] = useState<string>("");
@@ -92,7 +81,7 @@ export default function Players() {
       playersTable[player.key] = player;
 
       return playersTable;
-    }
+    },
   );
 
   const reset = () => {
@@ -124,7 +113,7 @@ export default function Players() {
         const key = player.key;
         if (isTimerRunning(key)) {
           times.current[key]!.innerText = formatMilliseconds(
-            getElapsedTime(key)
+            getElapsedTime(key),
           );
         }
       }
@@ -157,7 +146,7 @@ export default function Players() {
         }
       }
     },
-    [handleUpdatePlayer, getElapsedTime, players]
+    [handleUpdatePlayer, getElapsedTime, players],
   );
 
   const handleAddPlayer = useAddRowCallback("players", (name) => {
@@ -184,7 +173,7 @@ export default function Players() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex justify-between mb-4">
+      <div className="mb-4 flex justify-between">
         <Button
           variant="outline"
           type="button"
@@ -195,7 +184,7 @@ export default function Players() {
               setSortBy("name");
             }
           }}
-          className="bg-card shadow-sm hover:bg-card/80"
+          className="bg-card hover:bg-card/80 shadow-sm"
         >
           Sort by: {sortBy === "name" ? "Name" : "Time"}
           <ArrowDownAZ size={20} className="ml-2" />
@@ -208,7 +197,7 @@ export default function Players() {
             handlePlayPause();
           }}
           size="icon"
-          className="h-10 w-10 bg-card shadow-sm hover:bg-card/80"
+          className="bg-card hover:bg-card/80 h-10 w-10 shadow-sm"
         >
           <Pause className="size-5" />
         </Button>
@@ -217,8 +206,8 @@ export default function Players() {
         {playersSorted.map((player, index) => (
           <div
             className={cn(
-              "flex w-full rounded-lg overflow-hidden shadow-sm",
-              index % 2 === 0 ? "bg-muted" : "bg-card"
+              "flex w-full overflow-hidden rounded-lg shadow-sm",
+              index % 2 === 0 ? "bg-muted" : "bg-card",
             )}
             key={player.key}
           >
@@ -235,13 +224,13 @@ export default function Players() {
                   : "border-l-4 border-l-blue-500",
                 index % 2 === 0
                   ? "bg-muted hover:bg-muted/80"
-                  : "bg-card hover:bg-card/80"
+                  : "bg-card hover:bg-card/80",
               )}
             >
               <div className="flex items-center">
                 <p className="font-medium">{player.name}</p>
                 {player.positions && (
-                  <span className="ml-2 text-sm text-muted-foreground">
+                  <span className="text-muted-foreground ml-2 text-sm">
                     ({player.positions.split("").join(" ")})
                   </span>
                 )}
@@ -264,7 +253,7 @@ export default function Players() {
                     "h-16 w-16 rounded-none border-0",
                     index % 2 === 0
                       ? "bg-muted hover:bg-muted/80"
-                      : "bg-card hover:bg-card/80"
+                      : "bg-card hover:bg-card/80",
                   )}
                 >
                   <Menu className="size-6" />
@@ -373,7 +362,7 @@ export default function Players() {
                 "h-16 w-16 rounded-none border-0",
                 index % 2 === 0
                   ? "bg-muted hover:bg-muted/80"
-                  : "bg-card hover:bg-card/80"
+                  : "bg-card hover:bg-card/80",
               )}
             >
               {player.playing ? (
@@ -387,14 +376,14 @@ export default function Players() {
       </div>
       <div className="flex w-full">
         <form className="flex w-full" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex w-full shadow-sm rounded-lg overflow-hidden">
+          <div className="flex w-full overflow-hidden rounded-lg shadow-sm">
             <Input
               onChange={(e) => {
                 setPlayerToAdd(e.target.value);
               }}
               minLength={1}
               value={playerToAdd}
-              className="rounded-none border-r-0 h-12 bg-card focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-card h-12 rounded-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               type="text"
               placeholder="Player Name"
             />
@@ -406,7 +395,7 @@ export default function Players() {
                   setPlayerToAdd("");
                 }
               }}
-              className="h-12 rounded-none px-4 bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 h-12 rounded-none px-4"
             >
               <Plus size={20} className="mr-2" />
               Add Player
@@ -414,11 +403,11 @@ export default function Players() {
           </div>
         </form>
       </div>
-      <div className="flex justify-start gap-4 mt-4">
+      <div className="mt-4 flex justify-start gap-4">
         <Button
           variant="outline"
           onClick={() => setShowResetBtn(!showResetBtn)}
-          className="bg-card shadow-sm hover:bg-card/80"
+          className="bg-card hover:bg-card/80 shadow-sm"
         >
           Reset Game
         </Button>
@@ -429,18 +418,6 @@ export default function Players() {
           </Button>
         )}
       </div>
-      {showResetBtn && (
-        <div className="flex flex-col">
-          <span>Web socket</span>
-          <span>exists: {(!!synchronizer?.getWebSocket()).toString()}</span>
-          <span>
-            Connecting: {(readyState === WebSocket.CONNECTING).toString()}
-          </span>
-          <span>Open: {(readyState === WebSocket.OPEN).toString()}</span>
-          <span>Closing: {(readyState === WebSocket.CLOSING).toString()}</span>
-          <span>Closed: {(readyState === WebSocket.CLOSED).toString()}</span>
-        </div>
-      )}
     </div>
   );
 }

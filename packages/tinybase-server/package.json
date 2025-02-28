@@ -1,14 +1,14 @@
 {
-  "name": "@sonicjs/tinybase-server",
+  "name": "game-time-plus-tinybase-server",
+  "main": "./ws-server.ts",
   "version": "1.0.0",
   "description": "",
-  "main": "ws-server.ts",
   "author": "jamesgpearce",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy ./ws-server.ts",
-    "dev": "wrangler dev ./ws-server.ts --persist-to ../../.wrangler"
+    "dev": "wrangler dev ./ws-server.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241018.0",

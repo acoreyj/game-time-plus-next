@@ -1,5 +1,6 @@
 {
   "name": "game-time-plus-tinybase-server",
+  "main": "./ws-server.ts",
   "compatibility_date": "2025-02-14",
   "observability": {
     "enabled": true,
