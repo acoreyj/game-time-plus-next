@@ -27,7 +27,7 @@ const formSchema = z.object({
 });
 
 export function TeamNameForm() {
-  const { store } = useTeamsStore();
+  const { store, addTeam } = useTeamsStore();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,20 +37,8 @@ export function TeamNameForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     form.reset();
-    const teamName = unSlugify(slugify(values.teamName));
-    const teamCity = unSlugify(slugify(values.teamCity));
-    const teamId = slugify(teamName + teamCity);
-    const rows = store.getRowIds("teams");
-    const teamExists = rows.find(
-      (row) => store.getCell("teams", row, "id") === teamId
-    );
-    if (!teamExists) {
-      store?.addRow("teams", {
-        id: teamId,
-        name: teamName,
-        city: teamCity,
-      });
-    }
+    const { teamName, teamCity } = addTeam(values.teamName, values.teamCity);
+
     router.push(`/team/${teamCity}/${teamName}`);
   }
 

@@ -37,6 +37,7 @@ export function useTeamsStore() {
         city: teamCity,
       });
     }
+    return { teamName, teamCity, teamId };
   };
 
   return {
